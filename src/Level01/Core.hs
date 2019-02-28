@@ -2,8 +2,7 @@
 {-# OPTIONS_GHC -fno-warn-unused-matches #-}
 module Level01.Core (runApp) where
 
-import           Network.Wai              (Application, Request, Response,
-                                           ResponseReceived, responseLBS)
+import           Network.Wai              (Application, responseLBS)
 import           Network.Wai.Handler.Warp (run)
 
 import           Network.HTTP.Types       (status200)
@@ -29,11 +28,9 @@ import           Network.HTTP.Types       (status200)
 --
 -- We've used the non-synonym version of the `Application` type below.
 app
-  :: Request
-  -> (Response -> IO ResponseReceived)
-  -> IO ResponseReceived
+  :: Application
 app _ cb =
-  error "Application not implemented"
+  cb $ responseLBS status200 [] "Hello World"
 
 -- We keep this main function here as it is useful to build your application as
 -- a library. The reasoning behind this is that when you come to do your
@@ -41,4 +38,4 @@ app _ cb =
 -- needing to worry about any initialisation code you've buried in your
 -- executable Main.hs.
 runApp :: IO ()
-runApp = run undefined undefined
+runApp = run 1234 app
