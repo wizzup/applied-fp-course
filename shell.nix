@@ -8,13 +8,15 @@ let
 
   # Override the basic derivation so we can have a more fully feature
   # environment for hacking on the course material
-  courseDevEnv = (pkgs.haskell.lib.addBuildTools course
-    [ # Include the SQLite Database application
-      pkgs.sqlite
-
-      # 'ghcid' auto reloading tool
-      pkgs.haskellPackages.ghcid
-    ]
+  courseDevEnv = with pkgs; (haskell.lib.addBuildTools course
+    ([
+      sqlite         # Include the SQLite Database application
+      cabal-install  # for cabal-<newcommand>
+    ] ++ (with haskellPackages;
+    [
+      # ghcid  # auto reloading tool
+      hlint  # code linter
+    ]))
   # We don't want nix to build the thing, we want the environment so we can
   # build the thing.
   ).env;
